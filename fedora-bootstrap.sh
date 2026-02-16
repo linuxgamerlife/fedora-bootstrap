@@ -91,7 +91,7 @@ dnf -y install \
   linux-firmware
 
 echo "Installing OBS Studio (RPM)..."
-dnf -y obs-studio
+dnf -y install obs-studio
 
 echo "Installing gaming tools..."
 dnf -y install steam
