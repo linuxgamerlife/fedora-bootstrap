@@ -105,12 +105,6 @@ Removes unwanted default applications to keep the system clean:
 - Xed
 - Xfburn
 
-### Container and AppImage tooling removed
-
-- Podman
-- Podman Desktop
-- FUSE packages
-- Gear Lever
 
 This ensures a lean, gaming-focused environment.
 
@@ -121,7 +115,7 @@ This ensures a lean, gaming-focused environment.
 Recommended installation method:
 
 - Fedora Everything ISO
-- Minimal Install selected
+- Custome Base Install selected
 - Boot to TTY login
 - Internet connection available
 
@@ -150,7 +144,7 @@ The system will boot into the Cinnamon desktop.
 ## Recommended installation workflow
 
 1. Install Fedora Everything
-2. Select Minimal Install
+2. Select Base Fedora Install
 3. Reboot
 4. Login to TTY
 5. Run bootstrap command
