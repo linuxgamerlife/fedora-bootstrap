@@ -6,6 +6,8 @@ It is designed to be run from a minimal Fedora install that boots to TTY. One co
 
 This allows you to reproduce the same environment quickly across physical machines, virtual machines, and test systems.
 
+# **_AMD ONLY_**
+
 ---
 
 ## What this installs and configures
