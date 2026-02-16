@@ -1,100 +1,127 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Fedora Bootstrap Script
-# Target: Fedora Everything minimal install (TTY)
-# Installs Cinnamon, RPM Fusion, codecs, Steam (RPM), OBS (RPM), Flatpak, KDE tools
-# Removes unwanted GNOME utilities
-# Safe to run multiple times
+# Fedora Bootstrap Script (TTY friendly)
+# Installs: Cinnamon, RPM Fusion, codecs, Steam (RPM), OBS (RPM), Flatpak + Flathub, KDE tools, KWrite
+# Removes: GNOME Terminal, GNOME Disks, Thunderbird
+# Adds: ffmpeg swap, full GStreamer set, multimedia groups, VA-API bits, Cisco OpenH264, FUSE + Gear Lever,
+#       faster boot tweak, Lutris, MangoHud, Podman stack + Podman Desktop, VLC, Audacity, Flatseal, gnome-themes-extra
+#
+# Run:
+#   curl -fsSL https://tinyurl.com/lgl-fedora | sudo bash
 
-echo "Fedora Bootstrap starting..."
+echo "Linux Gamer Life Fedora Bootstrap starting..."
 
-# Ensure running as root
 if [[ $EUID -ne 0 ]]; then
-    echo "Please run with sudo"
-    exit 1
+  echo "Run with sudo, for example: sudo bash $0"
+  exit 1
 fi
 
-FEDORA_VERSION=$(rpm -E %fedora)
+FEDORA_VERSION="$(rpm -E %fedora)"
+echo "Detected Fedora version: ${FEDORA_VERSION}"
 
-echo "Detected Fedora version: $FEDORA_VERSION"
-
-echo "Updating system..."
+echo "Updating base system..."
 dnf -y upgrade --refresh
 
 echo "Installing core utilities..."
-dnf -y install \
-    curl \
-    wget \
-    git \
-    fastfetch
+dnf -y install curl wget git dnf-plugins-core
 
-echo "Enabling RPM Fusion Free..."
+echo "Enabling RPM Fusion (free + nonfree)..."
 dnf -y install \
-    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm
+  "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm" \
+  "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm"
 
-echo "Enabling RPM Fusion Non-Free..."
-dnf -y install \
-    https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm
-
-echo "Refreshing repos..."
+echo "Refreshing repos after RPM Fusion..."
 dnf -y upgrade --refresh
 
 echo "Installing Cinnamon Desktop..."
 dnf -y install @cinnamon-desktop
 
-echo "Installing display manager..."
+echo "Installing and enabling LightDM..."
 dnf -y install lightdm lightdm-gtk
-
-echo "Enabling LightDM..."
 systemctl enable lightdm
 
-echo "Installing multimedia codecs..."
+echo "Removing Thunderbird if present..."
+dnf -y remove thunderbird || true
+
+echo "Removing GNOME Terminal and GNOME Disks if present..."
+dnf -y remove gnome-terminal gnome-disk-utility || true
+
+echo "Installing KDE tools and KWrite..."
+dnf -y install konsole dolphin kde-partitionmanager kwrite
+
+echo "Installing Flatpak and adding Flathub..."
+dnf -y install flatpak
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+echo "Replacing ffmpeg-free with ffmpeg (RPM Fusion)..."
+dnf -y swap ffmpeg-free ffmpeg --allowerasing || true
+
+echo "Enabling Cisco OpenH264 repo and updating..."
+dnf config-manager --set-enabled fedora-cisco-openh264 || true
+dnf -y upgrade --refresh
+
+echo "Installing Cisco OpenH264 packages..."
+dnf -y install openh264 gstreamer1-plugin-openh264 mozilla-openh264 || true
+
+echo "Installing full GStreamer plugin set..."
 dnf -y install \
-    gstreamer1-plugins-base \
-    gstreamer1-plugins-good \
-    gstreamer1-plugins-bad-free \
-    gstreamer1-plugins-bad-freeworld \
-    gstreamer1-plugins-ugly \
-    gstreamer1-plugin-openh264 \
-    ffmpeg \
-    ffmpeg-libs
+  "gstreamer1-plugins-bad-*" \
+  "gstreamer1-plugins-good-*" \
+  gstreamer1-plugins-base \
+  gstreamer1-plugin-openh264 \
+  gstreamer1-libav \
+  "lame*" \
+  --exclude=gstreamer1-plugins-bad-free-devel || true
+
+echo "Installing multimedia groups..."
+dnf -y group install multimedia || true
+dnf -y group install sound-and-video || true
+
+echo "Installing VA-API related packages..."
+dnf -y install ffmpeg-libs libva libva-utils
 
 echo "Installing AMD Mesa / Vulkan stack..."
 dnf -y install \
-    mesa-dri-drivers \
-    mesa-vulkan-drivers \
-    vulkan-loader \
-    mesa-va-drivers \
-    mesa-vdpau-drivers \
-    linux-firmware
+  mesa-dri-drivers \
+  mesa-vulkan-drivers \
+  vulkan-loader \
+  mesa-va-drivers \
+  mesa-vdpau-drivers \
+  linux-firmware
 
-echo "Installing Steam (RPM)..."
-dnf -y install steam
+echo "Installing Steam (RPM) and OBS Studio (RPM)..."
+dnf -y install steam obs-studio
 
-echo "Installing OBS Studio (RPM)..."
-dnf -y install obs-studio
+echo "Installing FUSE and Gear Lever (Flatpak)..."
+dnf -y install fuse fuse-libs || true
+flatpak install -y flathub it.mijorus.gearlever || true
 
-echo "Installing Flatpak..."
-dnf -y install flatpak
+echo "Disabling NetworkManager wait-online for faster boot..."
+systemctl disable NetworkManager-wait-online.service || true
 
-echo "Adding Flathub..."
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+echo "Installing gaming tools..."
+dnf -y install lutris mangohud
 
-echo "Installing KDE tools..."
-dnf -y install \
-    konsole \
-    dolphin \
-    kde-partitionmanager
+echo "Installing Podman core..."
+dnf -y install podman podman-compose podman-docker
 
-echo "Removing unwanted GNOME utilities..."
-dnf -y remove \
-    gnome-terminal \
-    gnome-disk-utility || true
+echo "Installing Podman Desktop (Flatpak)..."
+flatpak install -y flathub io.podman_desktop.PodmanDesktop || true
+
+echo "Installing VLC (RPM) and Audacity (Flatpak)..."
+dnf -y install vlc
+flatpak install -y flathub org.audacityteam.Audacity || true
+
+echo "Installing Flatseal (Flatpak)..."
+flatpak install -y flathub com.github.tchx84.Flatseal || true
+
+echo "Installing extra themes package..."
+dnf -y install gnome-themes-extra
 
 echo "Setting graphical boot target..."
 systemctl set-default graphical.target
 
-echo "Bootstrap complete."
-echo "Reboot recommended."
+echo "Bootstrap complete. Reboot recommended."
 echo "Run: reboot"
+
