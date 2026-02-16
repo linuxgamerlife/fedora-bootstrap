@@ -1,90 +1,141 @@
-# Linux Gamer Life Fedora Bootstrap - AMD ONLY
+# Linux Gamer Life Fedora Bootstrap
 
-This script turns a fresh Fedora installation into a fully configured Linux Gamer Life environment with Cinnamon, gaming tools, multimedia support, Flatpak integration, and essential utilities.
+This script converts a fresh Fedora Everything Minimal install into a fully configured Linux Gamer Life Cinnamon environment.
 
-It is designed to be run from a minimal Fedora install that boots to TTY. One command installs and configures everything automatically.
+It is designed to be run from TTY after a minimal Fedora install. One command installs and configures everything automatically.
 
-This allows you to reproduce the same environment quickly across physical machines, virtual machines, and test systems.
+This creates a consistent, reproducible environment across physical machines, virtual machines, and test systems.
 
 ---
 
 ## What this installs and configures
 
-### Desktop
+### Desktop environment
+
 - Cinnamon desktop
 - LightDM display manager
-- KDE tools:
-  - Konsole
-  - Dolphin
-  - KDE Partition Manager
-  - KWrite
 
-### Multimedia support
+### KDE tools and replacements
+
+These replace several default GNOME and Cinnamon utilities with KDE equivalents:
+
+- Konsole (terminal)
+- Dolphin (file manager)
+- KDE Partition Manager
+- KWrite (text editor)
+- Ark (archive manager, replaces File Roller)
+- Okular (document viewer, replaces Evince)
+- Gwenview (image viewer, replaces Eye of MATE)
+- Discover (software manager, replaces GNOME Software)
+- Fedora Media Writer
+
+### Multimedia and codec support
+
+Full multimedia capability using RPM Fusion and Cisco OpenH264:
+
 - Full ffmpeg (replaces ffmpeg-free)
 - Complete GStreamer plugin set
 - Multimedia and sound-and-video groups
-- Cisco OpenH264 codec support
+- Cisco OpenH264 support
 - VA-API acceleration libraries
-- VLC media player
-- Audacity (Flatpak)
-- FUSE and Gear Lever (AppImage support)
+- Mesa Vulkan and video acceleration stack
 
 ### Gaming tools
+
 - Steam (RPM version)
 - OBS Studio (RPM version)
 - Lutris
 - MangoHud
 
-### Container tools
-- Podman
-- Podman Compose
-- Podman Docker compatibility layer
-- Podman Desktop (Flatpak)
+### Proton and compatibility tools
+
+Installed via Flatpak:
+
+- ProtonUp-Qt
+- ProtonPlus
+
+These allow easy installation and management of Proton-GE and other compatibility tools.
 
 ### Flatpak ecosystem
-- Flatpak installed and enabled
+
+- Flatpak
 - Flathub repository enabled
-- Flatseal
-- Gear Lever
-- Podman Desktop
-- Audacity
+- Flatseal (Flatpak permissions manager)
 
-### System improvements
-- Enables RPM Fusion free and non-free repositories
-- Enables Cisco OpenH264 repository
-- Installs full Mesa Vulkan and VA-API stack
-- Disables NetworkManager wait-online for faster boot
+### Python and CLI tools
 
-### Removes unwanted packages
+Installed properly using pipx for isolation:
+
+- Python 3
+- pipx
+- tldr (simplified man pages)
+- yt-dlp (media downloader)
+
+These are installed for the user who runs the script.
+
+### System configuration improvements
+
+- RPM Fusion free and non-free repositories enabled
+- Cisco OpenH264 repository enabled
+- NetworkManager wait-online disabled for faster boot
+- Graphical target enabled
+
+---
+
+## What this removes
+
+Removes unwanted default applications to keep the system clean:
+
+### GNOME and Cinnamon apps removed
+
 - Thunderbird
 - GNOME Terminal
 - GNOME Disks
+- GNOME Software
+- File Roller
+- Document Scanner
+- Document Viewer
+- Eye of MATE
+
+### Other utilities removed
+
+- HexChat
+- Pidgin
+- mpv
+- Xed
+- Xfburn
+
+### Container and AppImage tooling removed
+
+- Podman
+- Podman Desktop
+- FUSE packages
+- Gear Lever
+
+This ensures a lean, gaming-focused environment.
 
 ---
 
 ## Requirements
 
-A fresh Fedora installation is recommended.
+Recommended installation method:
 
-Recommended method:
-
-- Install Fedora using the **Fedora Everything ISO**
-- Select **Minimal Install**
-- Boot into **TTY login**
-
-A network connection must be available.
+- Fedora Everything ISO
+- Minimal Install selected
+- Boot to TTY login
+- Internet connection available
 
 ---
 
 ## How to run
 
-Login to your Fedora system, then run:
+From TTY, login and run:
 
 ```bash
 curl -fsSL https://tinyurl.com/lgl-fedora | sudo bash
 ```
 
-Wait for the script to complete.
+Wait for the script to finish.
 
 Then reboot:
 
@@ -92,7 +143,7 @@ Then reboot:
 reboot
 ```
 
-After reboot, the system will start into the Cinnamon desktop.
+The system will boot into the Cinnamon desktop.
 
 ---
 
@@ -102,20 +153,38 @@ After reboot, the system will start into the Cinnamon desktop.
 2. Select Minimal Install
 3. Reboot
 4. Login to TTY
-5. Run the bootstrap command
+5. Run bootstrap command
 6. Reboot
 
 Done.
 
 ---
 
+## Python tools installed
+
+After installation, you can use:
+
+```bash
+tldr dnf
+tldr systemctl
+yt-dlp URL
+```
+
+To update pipx tools later:
+
+```bash
+pipx upgrade-all
+```
+
+---
+
 ## Safety and transparency
 
-This script was developed with the help of AI, is fully open source, and you can inspect it here:
+View the script source:
 
 https://github.com/linuxgamerlife/fedora-bootstrap
 
-If you prefer, download and review before running:
+Download and inspect manually if preferred:
 
 ```bash
 curl -O https://raw.githubusercontent.com/linuxgamerlife/fedora-bootstrap/main/fedora-bootstrap.sh
@@ -127,24 +196,13 @@ sudo ./fedora-bootstrap.sh
 
 ## Purpose
 
-This script provides a fast, repeatable, and reliable way to deploy a Fedora gaming and creator environment.
+This script provides a fast, repeatable, and controlled Fedora deployment optimized for:
 
-It is especially useful for:
-
-- Fresh installs
+- Linux gaming
+- Content creation
 - Virtual machines
 - Testing environments
-- Multi-machine setups
 - Linux Gamer Life workflows
-
----
-
-## Notes
-
-- Designed for clean Fedora installs
-- Safe to run multiple times
-- Existing packages will be skipped automatically
-- Works on Fedora 40, 41, 42, and newer
 
 ---
 
