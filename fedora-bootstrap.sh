@@ -112,6 +112,9 @@ dnf -y remove thunderbird hexchat pidgin mpv || true
 info "Removing GNOME tools you do not want"
 dnf -y remove gnome-terminal gnome-disk-utility gnome-software || true
 
+info "Removing Nemo file manager and related components"
+dnf -y remove nemo nemo-extensions nemo-fileroller nemo-preview || true
+
 info "Removing MATE and Mint style utilities you do not want"
 # Eye of MATE is typically packaged as eom
 dnf -y remove xed xfburn eom || true
