@@ -7,18 +7,12 @@ set -euo pipefail
 # Installs and configures:
 # - Cinnamon + LightDM
 # - RPM Fusion (free + nonfree) + Cisco OpenH264 repo
+# - Python tooling: python3, pipx, tldr, yt-dlp (via pipx for the invoking user)
 # - Codecs: ffmpeg swap, full GStreamer set, multimedia groups, VA-API bits, OpenH264
 # - Gaming: Steam (RPM), OBS (RPM), Lutris, MangoHud
 # - Flatpak + Flathub + Flatseal
 # - KDE apps on Cinnamon: Konsole, Dolphin, KDE Partition Manager, KWrite
-# - Replacements and extras:
-#   - Ark (replaces File Roller)
-#   - Okular (replaces Document Viewer)
-#   - Gwenview (replaces Eye of MATE)
-#   - Discover (Plasma Discover, replaces GNOME Software)
-#   - Fedora Media Writer
-#   - ProtonUp-Qt (Flatpak)
-#   - ProtonPlus (Flatpak)
+# - Replacements: Ark, Okular, Gwenview, Discover, Fedora Media Writer
 #
 # Removes:
 # - Thunderbird
@@ -26,8 +20,11 @@ set -euo pipefail
 # - GNOME Disks
 # - File Roller, Document Scanner, Document Viewer, HexChat, mpv, Pidgin, GNOME Software
 # - Xed, Xfburn, Eye of MATE
-# - FUSE and AppImage helper (fuse packages and Gear Lever) if present
-# - Podman tooling and Podman Desktop if present
+# - FUSE and Gear Lever (if present)
+# - Podman tooling and Podman Desktop (if present)
+#
+# Tweaks:
+# - Disables NetworkManager-wait-online for faster boot
 #
 # Run:
 #   curl -fsSL https://tinyurl.com/lgl-fedora | sudo bash
@@ -60,11 +57,23 @@ dnf_group_install_best_effort() {
   dnf -y group install "${group_name}" || true
 }
 
+# The user who invoked sudo is who we should configure for pipx installs.
+get_target_user() {
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    printf "%s" "${SUDO_USER}"
+    return
+  fi
+  # Fallbacks for edge cases
+  printf "%s" "$(logname 2>/dev/null || echo root)"
+}
+
 printf "${BOLD}${GREEN}Linux Gamer Life Fedora Bootstrap${RESET}\n"
 require_root
 
+TARGET_USER="$(get_target_user)"
 FEDORA_VERSION="$(rpm -E %fedora)"
 info "Detected Fedora version: ${FEDORA_VERSION}"
+info "Target user for user-level tooling: ${TARGET_USER}"
 
 # -----------------------------
 # 1) Base system + tooling
@@ -106,16 +115,16 @@ info "Removing GNOME tools you do not want"
 dnf -y remove gnome-terminal gnome-disk-utility gnome-software || true
 
 info "Removing MATE and Mint style utilities you do not want"
+# Eye of MATE is typically packaged as eom
 dnf -y remove xed xfburn eom || true
 
 info "Removing File Roller, Document Scanner, and Document Viewer"
-# Fedora package names typically used for these:
-# - File Roller: file-roller
-# - Document Scanner: simple-scan
-# - Document Viewer: evince
+# File Roller: file-roller
+# Document Scanner: simple-scan
+# Document Viewer: evince
 dnf -y remove file-roller simple-scan evince || true
 
-info "Removing FUSE and AppImage helper if present"
+info "Removing FUSE and Gear Lever if present"
 dnf -y remove fuse fuse-libs || true
 flatpak uninstall -y it.mijorus.gearlever || true
 
@@ -135,14 +144,28 @@ info "Replacements for removed apps"
 dnf -y install ark okular gwenview
 
 info "KDE Discover (Plasma Discover)"
-# plasma-discover is the app, plasma-discover-packagekit adds PackageKit support for RPM sources.
 dnf -y install plasma-discover plasma-discover-packagekit
 
 info "Fedora Media Writer"
 dnf -y install mediawriter
 
 # -----------------------------
-# 6) Multimedia and codecs
+# 6) Python, pipx, and CLI tools
+# -----------------------------
+section "Python, pipx, and CLI tools"
+
+info "Installing Python and pipx"
+dnf -y install python3 python3-pip pipx
+
+info "Ensuring pipx is ready for the target user"
+sudo -u "${TARGET_USER}" pipx ensurepath || true
+
+info "Installing tldr and yt-dlp via pipx for the target user"
+sudo -u "${TARGET_USER}" pipx install --include-deps tldr || true
+sudo -u "${TARGET_USER}" pipx install --include-deps yt-dlp || true
+
+# -----------------------------
+# 7) Multimedia and codecs
 # -----------------------------
 section "Multimedia and codecs"
 
@@ -165,7 +188,7 @@ info "Install VA-API related packages"
 dnf -y install ffmpeg-libs libva libva-utils
 
 # -----------------------------
-# 7) AMD stack (Fedora defaults + extras)
+# 8) AMD stack (Fedora defaults + extras)
 # -----------------------------
 section "AMD Mesa and Vulkan stack"
 dnf -y install \
@@ -177,7 +200,7 @@ dnf -y install \
   linux-firmware
 
 # -----------------------------
-# 8) Flatpak + Flathub + Flatpak apps
+# 9) Flatpak + Flathub + Flatpak apps
 # -----------------------------
 section "Flatpak, Flathub, and Flatpak apps"
 dnf -y install flatpak
@@ -187,15 +210,13 @@ info "Flatseal"
 flatpak install -y flathub com.github.tchx84.Flatseal || true
 
 info "ProtonUp-Qt"
-# Flathub app id: net.davidotek.pupgui2
 flatpak install -y flathub net.davidotek.pupgui2 || true
 
 info "ProtonPlus"
-# Flathub app id: com.vysp3r.ProtonPlus
 flatpak install -y flathub com.vysp3r.ProtonPlus || true
 
 # -----------------------------
-# 9) Gaming tools
+# 10) Gaming tools
 # -----------------------------
 section "Gaming tools"
 dnf -y install steam
@@ -203,7 +224,7 @@ dnf -y install obs-studio
 dnf -y install lutris mangohud
 
 # -----------------------------
-# 10) Boot and system tweaks
+# 11) Boot and system tweaks
 # -----------------------------
 section "Boot and system tweaks"
 systemctl disable NetworkManager-wait-online.service || true
