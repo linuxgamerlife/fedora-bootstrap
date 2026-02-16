@@ -214,9 +214,33 @@ section "Gaming tools"
 dnf -y install steam
 dnf -y install obs-studio
 dnf -y install lutris mangohud
+# -----------------------------
+# 11) Virtualization (virt-manager and KVM)
+# -----------------------------
+section "Virtualization (virt-manager and KVM)"
+
+info "Installing KVM, libvirt, and virt-manager"
+dnf -y install \
+  virt-manager \
+  libvirt \
+  libvirt-daemon-config-network \
+  libvirt-daemon-kvm \
+  qemu-kvm \
+  virt-install \
+  virt-viewer \
+  edk2-ovmf \
+  swtpm
+
+info "Enabling libvirtd service"
+systemctl enable --now libvirtd
+
+info "Adding user to libvirt group"
+usermod -aG libvirt "${TARGET_USER}"
+
+info "Virtualization setup complete (reboot required for group changes)"
 
 # -----------------------------
-# 11) Boot and system tweaks
+# 12) Boot and system tweaks
 # -----------------------------
 section "Boot and system tweaks"
 systemctl disable NetworkManager-wait-online.service || true
