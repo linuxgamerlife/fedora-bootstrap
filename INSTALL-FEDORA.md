@@ -103,11 +103,13 @@ Click Done.
 
 This is the most important step.
 
-## LEAVE IT AS DEFAULT
+**LEAVE IT AS DEFAULT**
 
-Make sure nothing else is selected.
+**Make sure nothing else is selected.**
 
-Do NOT select:
+Base environment should be: **_Fedora Custom Operating System_**
+
+**Do NOT select:**
 
 - Fedora Workstation
 - Server
