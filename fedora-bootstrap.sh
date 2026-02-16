@@ -247,6 +247,17 @@ systemctl disable NetworkManager-wait-online.service || true
 systemctl set-default graphical.target
 
 # -----------------------------
+# Final cleanup
+# -----------------------------
+section "Cleanup unused dependencies"
+
+info "Removing unused packages"
+dnf -y autoremove || true
+
+info "Cleaning package cache"
+dnf -y clean all || true
+
+# -----------------------------
 # Finish
 # -----------------------------
 section "Complete"
