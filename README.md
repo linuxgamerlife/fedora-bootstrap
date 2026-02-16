@@ -1,12 +1,10 @@
-# Linux Gamer Life Fedora Bootstrap
+# Linux Gamer Life Fedora Bootstrap - AMD ONLY
 
 This script turns a fresh Fedora installation into a fully configured Linux Gamer Life environment with Cinnamon, gaming tools, multimedia support, Flatpak integration, and essential utilities.
 
 It is designed to be run from a minimal Fedora install that boots to TTY. One command installs and configures everything automatically.
 
 This allows you to reproduce the same environment quickly across physical machines, virtual machines, and test systems.
-
-# **_AMD ONLY_**
 
 ---
 
