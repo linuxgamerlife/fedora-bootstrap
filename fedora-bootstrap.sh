@@ -95,10 +95,6 @@ dnf -y install steam obs-studio
 
 echo "Installing FUSE and Gear Lever (Flatpak)..."
 dnf -y install fuse fuse-libs || true
-flatpak install -y flathub it.mijorus.gearlever || true
-
-echo "Disabling NetworkManager wait-online for faster boot..."
-systemctl disable NetworkManager-wait-online.service || true
 
 echo "Installing gaming tools..."
 dnf -y install lutris mangohud
@@ -118,6 +114,9 @@ flatpak install -y flathub com.github.tchx84.Flatseal || true
 
 echo "Installing extra themes package..."
 dnf -y install gnome-themes-extra
+
+echo "Disabling NetworkManager wait-online for faster boot..."
+systemctl disable NetworkManager-wait-online.service || true
 
 echo "Setting graphical boot target..."
 systemctl set-default graphical.target
