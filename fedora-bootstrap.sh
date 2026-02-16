@@ -167,6 +167,7 @@ section "Multimedia and codecs"
 
 info "Replace ffmpeg-free with ffmpeg"
 dnf swap -y ffmpeg-free ffmpeg --allowerasing || true
+dnf -y install vlc || true
 
 info "Enable OpenH264 packages"
 dnf -y install openh264 gstreamer1-plugin-openh264 mozilla-openh264 || true
@@ -253,45 +254,6 @@ info "Virtualization setup complete (reboot required for group changes)"
 section "Boot and system tweaks"
 systemctl disable NetworkManager-wait-online.service || true
 systemctl set-default graphical.target
-
-# -----------------------------
-# Set replacement applications as defaults
-# -----------------------------
-section "Set replacement applications as defaults"
-
-info "Configuring default applications for ${TARGET_USER}"
-
-# File manager: Dolphin replaces Nemo as default handler
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.dolphin.desktop inode/directory
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.dolphin.desktop application/x-directory
-
-# Archive manager: Ark replaces File Roller
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/zip
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-tar
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-compressed-tar
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-xz-compressed-tar
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-7z-compressed
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-rar
-
-# Document viewer: Okular replaces Evince
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.okular.desktop application/pdf
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.okular.desktop application/x-pdf
-
-# Image viewer: Gwenview replaces Eye of MATE
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/jpeg
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/png
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/webp
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/gif
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/bmp
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/tiff
-
-# Text editor: KWrite replaces Xed
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.kwrite.desktop text/plain
-
-# Software manager: Discover replaces GNOME Software
-sudo -u "${TARGET_USER}" xdg-mime default org.kde.discover.desktop application/vnd.flatpak.ref || true
-
-info "Default applications configured"
 
 
 # -----------------------------
