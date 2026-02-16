@@ -124,14 +124,6 @@ info "Removing File Roller, Document Scanner, and Document Viewer"
 # Document Viewer: evince
 dnf -y remove file-roller simple-scan evince || true
 
-info "Removing FUSE and Gear Lever if present"
-dnf -y remove fuse fuse-libs || true
-flatpak uninstall -y it.mijorus.gearlever || true
-
-info "Removing Podman tooling if present"
-dnf -y remove podman podman-compose podman-docker || true
-flatpak uninstall -y io.podman_desktop.PodmanDesktop || true
-
 # -----------------------------
 # 5) KDE utilities and replacements on Cinnamon
 # -----------------------------
