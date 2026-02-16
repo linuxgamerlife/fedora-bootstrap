@@ -110,7 +110,7 @@ info "Removing mail, chat, and media apps you do not want"
 dnf -y remove thunderbird hexchat pidgin mpv || true
 
 info "Removing GNOME tools you do not want"
-dnf -y remove gnome-terminal gnome-disk-utility gnome-software || true
+dnf -y remove gnome-terminal gnome-disk-utility gnome-software gnome-screenshot || true
 
 info "Removing Nemo file manager and related components"
 dnf -y remove nemo nemo-extensions nemo-fileroller nemo-preview || true
@@ -134,7 +134,7 @@ info "Core KDE utilities"
 dnf -y install konsole dolphin kde-partitionmanager kwrite
 
 info "Replacements for removed apps"
-dnf -y install ark okular gwenview
+dnf -y install ark okular gwenview spectacle
 
 info "KDE Discover (Plasma Discover)"
 dnf -y install plasma-discover plasma-discover-packagekit
@@ -156,6 +156,9 @@ sudo -u "${TARGET_USER}" pipx ensurepath || true
 info "Installing tldr and yt-dlp via pipx for the target user"
 sudo -u "${TARGET_USER}" pipx install --include-deps tldr || true
 sudo -u "${TARGET_USER}" pipx install --include-deps yt-dlp || true
+
+info "Installing other essential tools"
+dnf -y install fastfetch tuned xrdp btop htop distrobox
 
 # -----------------------------
 # 7) Multimedia and codecs
@@ -208,13 +211,17 @@ flatpak install -y flathub net.davidotek.pupgui2 || true
 info "ProtonPlus"
 flatpak install -y flathub com.vysp3r.ProtonPlus || true
 
+info "Heroic Games Launcher"
+flatpak install -y flathub com.heroicgameslauncher.hgl || true
+
+info "Libre Office"
+flatpak install -y org.libreoffice.LibreOffice || true
+
 # -----------------------------
 # 10) Gaming tools
 # -----------------------------
 section "Gaming tools"
-dnf -y install steam
-dnf -y install obs-studio
-dnf -y install lutris mangohud
+dnf -y install steam obs-studio lutis mangohud 
 # -----------------------------
 # 11) Virtualization (virt-manager and KVM)
 # -----------------------------
@@ -246,6 +253,46 @@ info "Virtualization setup complete (reboot required for group changes)"
 section "Boot and system tweaks"
 systemctl disable NetworkManager-wait-online.service || true
 systemctl set-default graphical.target
+
+# -----------------------------
+# Set replacement applications as defaults
+# -----------------------------
+section "Set replacement applications as defaults"
+
+info "Configuring default applications for ${TARGET_USER}"
+
+# File manager: Dolphin replaces Nemo as default handler
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.dolphin.desktop inode/directory
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.dolphin.desktop application/x-directory
+
+# Archive manager: Ark replaces File Roller
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/zip
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-tar
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-compressed-tar
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-xz-compressed-tar
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-7z-compressed
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.ark.desktop application/x-rar
+
+# Document viewer: Okular replaces Evince
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.okular.desktop application/pdf
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.okular.desktop application/x-pdf
+
+# Image viewer: Gwenview replaces Eye of MATE
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/jpeg
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/png
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/webp
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/gif
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/bmp
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.gwenview.desktop image/tiff
+
+# Text editor: KWrite replaces Xed
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.kwrite.desktop text/plain
+
+# Software manager: Discover replaces GNOME Software
+sudo -u "${TARGET_USER}" xdg-mime default org.kde.discover.desktop application/vnd.flatpak.ref || true
+
+info "Default applications configured"
+
 
 # -----------------------------
 # Final cleanup
