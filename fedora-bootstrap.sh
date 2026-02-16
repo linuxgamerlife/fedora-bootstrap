@@ -20,8 +20,6 @@ set -euo pipefail
 # - GNOME Disks
 # - File Roller, Document Scanner, Document Viewer, HexChat, mpv, Pidgin, GNOME Software
 # - Xed, Xfburn, Eye of MATE
-# - FUSE and Gear Lever (if present)
-# - Podman tooling and Podman Desktop (if present)
 #
 # Tweaks:
 # - Disables NetworkManager-wait-online for faster boot
