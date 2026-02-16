@@ -90,20 +90,12 @@ dnf -y install \
   mesa-vdpau-drivers \
   linux-firmware
 
-echo "Installing Steam (RPM) and OBS Studio (RPM)..."
-dnf -y install steam obs-studio
-
-echo "Installing FUSE and Gear Lever (Flatpak)..."
-dnf -y install fuse fuse-libs || true
+echo "Installing OBS Studio (RPM)..."
+ obs-studio
 
 echo "Installing gaming tools..."
+dnf -y install steam
 dnf -y install lutris mangohud
-
-echo "Installing Podman core..."
-dnf -y install podman podman-compose podman-docker
-
-echo "Installing Podman Desktop (Flatpak)..."
-flatpak install -y flathub io.podman_desktop.PodmanDesktop || true
 
 echo "Installing VLC (RPM) and Audacity (Flatpak)..."
 dnf -y install vlc
