@@ -96,6 +96,7 @@ Removes unwanted default applications to keep the system clean:
 - Document Scanner
 - Document Viewer
 - Eye of MATE
+- Nemo
 
 ### Other utilities removed
 
