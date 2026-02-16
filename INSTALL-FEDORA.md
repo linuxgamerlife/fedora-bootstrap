@@ -1,4 +1,4 @@
-# Installing Fedora Everything and Preparing for Linux Gamer Life Bootstrap
+# Installing Fedora Everything and Preparing for Linux Gamer Life Bootstrap (AMD ONLY)
 
 This guide explains how to install Fedora Everything and reach a minimal TTY login, ready to run the Linux Gamer Life bootstrap script.
 
