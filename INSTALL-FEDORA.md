@@ -4,23 +4,22 @@ This guide explains how to install Fedora Everything and reach a minimal TTY log
 
 This process gives you a clean, minimal Fedora system that can be fully configured with one command.
 
+## TEST IN A VM FIRST
+If you are happy, continue.
+
 ---
 
 ## Step 1: Download Fedora Everything ISO
 
 Go to the official Fedora download page:
 
-https://fedoraproject.org/server/download/
+https://fedoraproject.org/misc/#everything 
 
 Scroll down and download:
 
 **Fedora Everything ISO**
 
-Direct link (may change with new versions):
-
-https://download.fedoraproject.org/pub/fedora/linux/releases/
-
-Choose the latest version, then download:
+Download:
 
 ```
 Fedora-Everything-netinst-x86_64.iso
@@ -33,6 +32,8 @@ It downloads only what is needed and allows minimal installation.
 ---
 
 ## Step 2: Create a bootable USB
+
+Use you're favourite tool or:
 
 ### On Linux
 
@@ -102,13 +103,7 @@ Click Done.
 
 This is the most important step.
 
-Select:
-
-**Base Environment:**
-
-```
-Custom Install
-```
+## LEAVE IT AS DEFAULT
 
 Make sure nothing else is selected.
 
@@ -121,20 +116,6 @@ Do NOT select:
 - GNOME
 
 Click Done.
-
----
-
-### Network
-
-Ensure network is enabled.
-
-This is required.
-
----
-
-### Root password
-
-Set a root password.
 
 ---
 
