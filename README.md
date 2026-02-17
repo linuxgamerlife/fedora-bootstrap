@@ -36,7 +36,6 @@ Full multimedia capability using RPM Fusion and Cisco OpenH264:
 
 - Full ffmpeg (replaces ffmpeg-free)
 - Complete GStreamer plugin set
-- Multimedia and sound-and-video groups
 - Cisco OpenH264 support
 - VA-API acceleration libraries
 - Mesa Vulkan and video acceleration stack
@@ -97,7 +96,6 @@ Removes unwanted default applications to keep the system clean:
 - Document Scanner
 - Document Viewer
 - Eye of MATE
-- Nemo
 
 ### Other utilities removed
 
@@ -117,7 +115,7 @@ This ensures a lean, gaming-focused environment.
 Recommended installation method:
 
 - Fedora Everything ISO
-- Custome Base Install selected
+- Custom Base Install selected
 - Boot to TTY login
 - Internet connection available
 
