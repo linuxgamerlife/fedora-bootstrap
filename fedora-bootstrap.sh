@@ -112,9 +112,6 @@ dnf -y remove thunderbird hexchat pidgin mpv || true
 info "Removing GNOME tools you do not want"
 dnf -y remove gnome-terminal gnome-disk-utility gnome-software gnome-screenshot || true
 
-info "Removing Nemo file manager and related components"
-dnf -y remove nemo nemo-extensions nemo-fileroller nemo-preview || true
-
 info "Removing MATE and Mint style utilities you do not want"
 # Eye of MATE is typically packaged as eom
 dnf -y remove xed xfburn eom || true
@@ -134,7 +131,7 @@ info "Core KDE utilities"
 dnf -y install konsole dolphin kde-partitionmanager kwrite
 
 info "Replacements for removed apps"
-dnf -y install ark okular gwenview spectacle
+dnf -y install ark okular gwenview spectacle elisa
 
 info "KDE Discover (Plasma Discover)"
 dnf -y install plasma-discover plasma-discover-packagekit
@@ -177,9 +174,9 @@ dnf install -y gstreamer1-plugins-{bad-\*,good-\*,base} \
   gstreamer1-plugin-openh264 gstreamer1-libav lame\* \
   --exclude=gstreamer1-plugins-bad-free-devel || true
 
-info "Install multimedia groups"
-dnf_group_install_best_effort "multimedia"
-dnf_group_install_best_effort "sound-and-video"
+#info "Install multimedia groups"
+#dnf_group_install_best_effort "multimedia"
+#dnf_group_install_best_effort "sound-and-video"
 
 info "Install VA-API related packages"
 dnf -y install ffmpeg-libs libva libva-utils

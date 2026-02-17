@@ -28,6 +28,7 @@ These replace several default GNOME and Cinnamon utilities with KDE equivalents:
 - Gwenview (image viewer, replaces Eye of MATE)
 - Discover (software manager, replaces GNOME Software)
 - Fedora Media Writer
+- Elisa
 
 ### Multimedia and codec support
 
