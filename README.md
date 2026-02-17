@@ -1,4 +1,4 @@
-# Linux Gamer Life Fedora Bootstrap!
+# Linux Gamer Life Fedora Bootstrap
 
 This script converts a fresh Fedora Everything Minimal install into a fully configured Linux Gamer Life Cinnamon environment.
 
