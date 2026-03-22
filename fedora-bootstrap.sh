@@ -13,6 +13,7 @@ set -euo pipefail
 # - Flatpak + Flathub + Flatseal
 # - KDE apps on Cinnamon: Konsole, Dolphin, KDE Partition Manager, KWrite
 # - Replacements: Ark, Okular, Gwenview, Discover, Fedora Media Writer
+# - Controller support
 #
 # Removes:
 # - Thunderbird
@@ -220,6 +221,7 @@ flatpak install -y org.libreoffice.LibreOffice || true
 # -----------------------------
 section "Gaming tools"
 dnf -y install steam obs-studio lutis mangohud 
+dnf -y install kernel-modules-extra
 # -----------------------------
 # 11) Virtualization (virt-manager and KVM)
 # -----------------------------
