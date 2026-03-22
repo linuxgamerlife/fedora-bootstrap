@@ -220,7 +220,7 @@ flatpak install -y org.libreoffice.LibreOffice || true
 # 10) Gaming tools
 # -----------------------------
 section "Gaming tools"
-dnf -y install steam obs-studio lutis mangohud 
+dnf -y install steam obs-studio lutris mangohud 
 dnf -y install kernel-modules-extra
 # -----------------------------
 # 11) Virtualization (virt-manager and KVM)
